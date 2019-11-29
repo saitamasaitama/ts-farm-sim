@@ -1,3 +1,5 @@
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
 module.exports = {
   // モード値を production に設定すると最適化された状態で、
   mode: "development",
@@ -10,15 +12,26 @@ module.exports = {
   module: {
     rules: [
       {
-        // 拡張子 .ts の場合
+        test: /\.js$/,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.vue$/,
+        loader:"vue-loader"
+      },
+      {
         test: /\.ts$/,
-        // TypeScript をコンパイルする
         use: "ts-loader"
-      }
+      },
     ],
   },
   // import 文で .ts ファイルを解決するため
   resolve: {
-    extensions: [".ts"]
-  }
+    extensions: [".ts",".vue" ],
+    alias: {
+      // vue-template-compilerに読ませてコンパイルするために必要
+      vue$: 'vue/dist/vue.esm.js'
+    }
+  },
+  plugins: [new VueLoaderPlugin()]
 };
